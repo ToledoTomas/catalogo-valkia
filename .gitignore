@@ -1,0 +1,27 @@
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+.env
+.env.*.local
+
+dist/
+build/
+*.tsbuildinfo
+
+.client/
+.generated/
+public/build/
+.cache/
+astro.config.mjs.ts
+
+prisma/dev.db
+prisma/dev.db-journal
+prisma/.DS_Store
+prisma/migrations/*/README.md
+
+
+ package-lock.json
+ yarn.lock
