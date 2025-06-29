@@ -1,0 +1,102 @@
+---
+---
+
+
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-beige-200 transition-all duration-300">
+  <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-20">
+      <!-- Logo and Brand Name -->
+      <div class="flex items-center">
+        <div class="bg-gradient-to-br from-beige-300 to-beige-500 rounded-full flex items-center justify-center">
+          <img src="/Valkia.png" alt="Logo Valkia" class="w-28 h-28 object-cover mt-5">
+        </div>
+        <div class="flex flex-col w-full">
+          <h1 class="text-xl font-elegant font-bold text-elegant-black leading-tight">VALKIA</h1>
+          <span class="text-xs text-beige-700 font-modern uppercase tracking-wide">Indumentaria</span>
+        </div>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden md:flex items-center space-x-8">
+        <a href="#catalogo" class="text-elegant-black hover:text-beige-600 font-modern text-sm font-medium transition-colors duration-200 relative group">
+          Catálogo
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-beige-400 transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a href="#tendencias" class="text-elegant-black hover:text-beige-600 font-modern text-sm font-medium transition-colors duration-200 relative group">
+          Tendencias
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-beige-400 transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a href="#contacto" class="text-elegant-black hover:text-beige-600 font-modern text-sm font-medium transition-colors duration-200 relative group">
+          Contacto
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-beige-400 transition-all duration-300 group-hover:w-full"></span>
+        </a>
+      </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-button" class="md:hidden p-2 rounded-lg text-elegant-black hover:bg-beige-100 transition-colors duration-200">
+          <svg id="hamburger-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+          <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden border-t border-beige-200 py-6">
+      <div class="flex flex-col space-y-6">
+        <a href="#catalogo" class="text-elegant-black hover:text-beige-600 font-modern text-base font-medium transition-colors duration-200 px-2">
+          Catálogo
+        </a>
+        <a href="#tendencias" class="text-elegant-black hover:text-beige-600 font-modern text-base font-medium transition-colors duration-200 px-2">
+          Tendencias
+        </a>
+        <a href="#contacto" class="text-elegant-black hover:text-beige-600 font-modern text-base font-medium transition-colors duration-200 px-2">
+          Contacto
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<script>
+  // Mobile menu toggle functionality
+  const mobileMenuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const hamburgerIcon = document.getElementById('hamburger-icon');
+  const closeIcon = document.getElementById('close-icon');
+
+  mobileMenuButton?.addEventListener('click', () => {
+    mobileMenu?.classList.toggle('hidden');
+    hamburgerIcon?.classList.toggle('hidden');
+    closeIcon?.classList.toggle('hidden');
+  });
+
+  // Close mobile menu when clicking on links
+  const mobileLinks = mobileMenu?.querySelectorAll('a');
+  mobileLinks?.forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu?.classList.add('hidden');
+      hamburgerIcon?.classList.remove('hidden');
+      closeIcon?.classList.add('hidden');
+    });
+  });
+
+  // Header scroll effect
+  let lastScrollY = window.scrollY;
+  const header = document.querySelector('header');
+
+  window.addEventListener('scroll', () => {
+    const currentScrollY = window.scrollY;
+    
+    if (currentScrollY > lastScrollY && currentScrollY > 100) {
+      header?.classList.add('-translate-y-full');
+    } else {
+      header?.classList.remove('-translate-y-full');
+    }
+    
+    lastScrollY = currentScrollY;
+  });
+</script>
