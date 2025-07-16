@@ -1,0 +1,91 @@
+---
+import Card from './Card.astro';
+
+const fashionItems = [
+  {
+    image: '/placeholder.svg?height=400&width=300',
+    title: 'Vestido Floral Elegante',
+    color: 'Pink',
+    category: 'Vestidos'
+  },
+  {
+    image: '/placeholder.svg?height=400&width=300',
+    title: 'Blusa de Seda Premium',
+    color: 'White',
+    category: 'Blusas'
+  },
+  {
+    image: '/placeholder.svg?height=400&width=300',
+    title: 'Falda Plisada Midi',
+    color: 'Black',
+    category: 'Faldas'
+  },
+  {
+    image: '/placeholder.svg?height=400&width=300',
+    title: 'Chaqueta Blazer Moderna',
+    color: 'Blue',
+    category: 'Chaquetas'
+  },
+  {
+    image: '/placeholder.svg?height=400&width=300',
+    title: 'Pantalón de Vestir',
+    color: 'Gray',
+    category: 'Pantalones'
+  },
+  {
+    image: '/placeholder.svg?height=400&width=300',
+    title: 'Top Crop Casual',
+    color: 'Green',
+    category: 'Tops'
+  },
+  {
+    image: '/placeholder.svg?height=400&width=300',
+    title: 'Vestido Cóctel Satinado',
+    color: 'Red',
+    category: 'Vestidos'
+  },
+  {
+    image: '/placeholder.svg?height=400&width=300',
+    title: 'Cardigan Oversize',
+    color: 'Beige',
+    category: 'Cardigans'
+  }
+];
+const categories = Array.from(new Set(fashionItems.map(item => item.category)));
+---
+
+<section class="py-12 bg-gray-50 mb-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">
+        Colección Femenina
+      </h2>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+        Descubre nuestra exclusiva selección de indumentaria femenina, 
+        diseñada para la mujer moderna y elegante.
+      </p>
+    </div>
+
+    <div class="flex flex-wrap justify-center gap-2 mb-8">
+      <button 
+        class="px-4 py-2 rounded border text-sm cursor-pointer hover:bg-gray-900 hover:text-white transition-colors duration-200"
+      >Todas</button>
+      {categories.map(category => (
+        <button 
+          class="px-4 py-2 rounded border text-sm cursor-pointer hover:bg-gray-900 hover:text-white transition-colors duration-200"
+        >{category}</button>
+      ))}
+    </div>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {fashionItems.map((item) => (
+        <Card 
+          image={item.image}
+          title={item.title}
+          color={item.color}
+          category={item.category}
+        />
+      ))}
+    </div>
+  </div>
+</section>
