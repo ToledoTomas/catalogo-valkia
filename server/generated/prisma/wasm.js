@@ -126,24 +126,32 @@ exports.Prisma.ProductScalarFieldEnum = {
   description: 'description',
   categoryId: 'categoryId',
   sizes: 'sizes',
-  colors: 'colors'
+  colors: 'colors',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.ImagesScalarFieldEnum = {
   id: 'id',
   url: 'url',
-  productId: 'productId'
+  productId: 'productId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.CategoryScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.AdminScalarFieldEnum = {
   id: 'id',
   email: 'email',
-  password: 'password'
+  password: 'password',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {

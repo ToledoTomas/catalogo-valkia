@@ -18,28 +18,44 @@ model Product {
   id          String   @id @default(uuid())
   name        String
   description String
-  category    Category @relation(fields: [categoryId], references: [id])
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId  String
   sizes       String[]
   colors      String[]
   images      Images[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("products")
 }
 
 model Images {
-  id        String  @id @default(uuid())
+  id        String   @id @default(uuid())
   url       String
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("images")
 }
 
 model Category {
-  id       String    @id @default(uuid())
-  name     String    @unique
-  products Product[]
+  id        String    @id @default(uuid())
+  name      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("categories")
 }
 
 model Admin {
-  id       String @id @default(uuid())
-  email    String @unique
-  password String
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("admins")
 }
