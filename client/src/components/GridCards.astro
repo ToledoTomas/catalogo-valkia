@@ -54,13 +54,13 @@ const fashionItems = [
 const categories = Array.from(new Set(fashionItems.map(item => item.category)));
 ---
 
-<section class="py-12 bg-gray-50 mb-12">
+<section id="catalogo" class="py-12 bg-primary-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-12">
-      <h2 class="text-3xl font-bold text-gray-900 mb-4">
+      <h2 class="text-3xl font-bold text-primary-900 mb-4">
         Colección Femenina
       </h2>
-      <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+      <p class="text-lg text-primary-600 max-w-2xl mx-auto">
         Descubre nuestra exclusiva selección de indumentaria femenina, 
         diseñada para la mujer moderna y elegante.
       </p>
@@ -68,16 +68,16 @@ const categories = Array.from(new Set(fashionItems.map(item => item.category)));
 
     <div class="flex flex-wrap justify-center gap-2 mb-8">
       <button 
-        class="px-4 py-2 rounded border text-sm cursor-pointer hover:bg-gray-900 hover:text-white transition-colors duration-200"
+        class="px-4 py-2 rounded border border-primary-300 text-primary-700 text-sm cursor-pointer hover:bg-primary-800 hover:text-white hover:border-primary-800 transition-colors duration-200"
       >Todas</button>
       {categories.map(category => (
         <button 
-          class="px-4 py-2 rounded border text-sm cursor-pointer hover:bg-gray-900 hover:text-white transition-colors duration-200"
+          class="px-4 py-2 rounded border border-primary-300 text-primary-700 text-sm cursor-pointer hover:bg-primary-800 hover:text-white hover:border-primary-800 transition-colors duration-200"
         >{category}</button>
       ))}
     </div>
     
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-12">
       {fashionItems.map((item) => (
         <Card 
           image={item.image}

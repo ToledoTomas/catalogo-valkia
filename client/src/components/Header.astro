@@ -20,10 +20,10 @@
           Catálogo
           <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-beige-400 transition-all duration-300 group-hover:w-full"></span>
         </a>
-        <a href="#tendencias" class="text-elegant-black hover:text-beige-600 font-modern text-sm font-medium transition-colors duration-200 relative group">
+        <!-- <a href="#tendencias" class="text-elegant-black hover:text-beige-600 font-modern text-sm font-medium transition-colors duration-200 relative group">
           Tendencias
           <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-beige-400 transition-all duration-300 group-hover:w-full"></span>
-        </a>
+        </a> -->
         <a href="#contacto" class="text-elegant-black hover:text-beige-600 font-modern text-sm font-medium transition-colors duration-200 relative group">
           Contacto
           <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-beige-400 transition-all duration-300 group-hover:w-full"></span>
@@ -46,9 +46,9 @@
         <a href="#catalogo" class="text-elegant-black hover:text-beige-600 font-modern text-base font-medium transition-colors duration-200 px-2">
           Catálogo
         </a>
-        <a href="#tendencias" class="text-elegant-black hover:text-beige-600 font-modern text-base font-medium transition-colors duration-200 px-2">
+        <!-- <a href="#tendencias" class="text-elegant-black hover:text-beige-600 font-modern text-base font-medium transition-colors duration-200 px-2">
           Tendencias
-        </a>
+        </a> -->
         <a href="#contacto" class="text-elegant-black hover:text-beige-600 font-modern text-base font-medium transition-colors duration-200 px-2">
           Contacto
         </a>
@@ -69,13 +69,42 @@
     closeIcon?.classList.toggle('hidden');
   });
 
-  const mobileLinks = mobileMenu?.querySelectorAll('a');
-  mobileLinks?.forEach(link => {
+  const mobileMenuLinks = mobileMenu?.querySelectorAll('a');
+  mobileMenuLinks?.forEach(link => {
     link.addEventListener('click', () => {
       mobileMenu?.classList.add('hidden');
       hamburgerIcon?.classList.remove('hidden');
       closeIcon?.classList.add('hidden');
     });
+  });
+
+  // Smooth scroll functionality
+  const handleSmoothScroll = (e: Event) => {
+    e.preventDefault();
+    const target = e.target as HTMLAnchorElement;
+    const href = target.getAttribute('href');
+    
+    if (href && href.startsWith('#')) {
+      const targetElement = document.querySelector(href);
+      if (targetElement) {
+        targetElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }
+  };
+
+  // Add smooth scroll to desktop navigation links
+  const desktopLinks = document.querySelectorAll('nav a[href^="#"]');
+  desktopLinks.forEach(link => {
+    link.addEventListener('click', handleSmoothScroll);
+  });
+
+  // Add smooth scroll to mobile navigation links
+  const mobileNavLinks = mobileMenu?.querySelectorAll('a[href^="#"]');
+  mobileNavLinks?.forEach(link => {
+    link.addEventListener('click', handleSmoothScroll);
   });
 
   let lastScrollY = window.scrollY;

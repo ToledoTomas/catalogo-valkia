@@ -1,1 +1,217 @@
 @import "tailwindcss";
+
+/* Primary colors - Gray palette based on Hero button */
+@layer utilities {
+  .bg-primary-50 {
+    background-color: #f9fafb;
+  }
+  .bg-primary-100 {
+    background-color: #f3f4f6;
+  }
+  .bg-primary-200 {
+    background-color: #e5e7eb;
+  }
+  .bg-primary-300 {
+    background-color: #d1d5db;
+  }
+  .bg-primary-400 {
+    background-color: #9ca3af;
+  }
+  .bg-primary-500 {
+    background-color: #6b7280;
+  }
+  .bg-primary-600 {
+    background-color: #4b5563;
+  }
+  .bg-primary-700 {
+    background-color: #374151;
+  }
+  .bg-primary-800 {
+    background-color: #1f2937;
+  }
+  .bg-primary-900 {
+    background-color: #111827;
+  }
+  
+  .text-primary-50 {
+    color: #f9fafb;
+  }
+  .text-primary-100 {
+    color: #f3f4f6;
+  }
+  .text-primary-200 {
+    color: #e5e7eb;
+  }
+  .text-primary-300 {
+    color: #d1d5db;
+  }
+  .text-primary-400 {
+    color: #9ca3af;
+  }
+  .text-primary-500 {
+    color: #6b7280;
+  }
+  .text-primary-600 {
+    color: #4b5563;
+  }
+  .text-primary-700 {
+    color: #374151;
+  }
+  .text-primary-800 {
+    color: #1f2937;
+  }
+  .text-primary-900 {
+    color: #111827;
+  }
+  
+  .border-primary-50 {
+    border-color: #f9fafb;
+  }
+  .border-primary-100 {
+    border-color: #f3f4f6;
+  }
+  .border-primary-200 {
+    border-color: #e5e7eb;
+  }
+  .border-primary-300 {
+    border-color: #d1d5db;
+  }
+  .border-primary-400 {
+    border-color: #9ca3af;
+  }
+  .border-primary-500 {
+    border-color: #6b7280;
+  }
+  .border-primary-600 {
+    border-color: #4b5563;
+  }
+  .border-primary-700 {
+    border-color: #374151;
+  }
+  .border-primary-800 {
+    border-color: #1f2937;
+  }
+  .border-primary-900 {
+    border-color: #111827;
+  }
+  
+  .from-primary-500 {
+    --tw-gradient-from: #6b7280;
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(107, 114, 128, 0));
+  }
+  .to-primary-700 {
+    --tw-gradient-to: #374151;
+  }
+  .from-primary-600 {
+    --tw-gradient-from: #4b5563;
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(75, 85, 99, 0));
+  }
+  .to-primary-800 {
+    --tw-gradient-to: #1f2937;
+  }
+}
+
+/* WhatsApp colors - Original green theme */
+@layer utilities {
+  .bg-whatsapp-500 {
+    background-color: #25d366;
+  }
+  .bg-whatsapp-600 {
+    background-color: #128c7e;
+  }
+  .from-whatsapp-500 {
+    --tw-gradient-from: #25d366;
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(37, 211, 102, 0));
+  }
+  .to-whatsapp-600 {
+    --tw-gradient-to: #128c7e;
+  }
+  .shadow-whatsapp-500\/20 {
+    box-shadow: 0 10px 15px -3px rgba(37, 211, 102, 0.2), 0 4px 6px -2px rgba(37, 211, 102, 0.1);
+  }
+  .shadow-whatsapp-500\/30 {
+    box-shadow: 0 10px 15px -3px rgba(37, 211, 102, 0.3), 0 4px 6px -2px rgba(37, 211, 102, 0.1);
+  }
+  .text-whatsapp-500 {
+    color: #25d366;
+  }
+  .text-whatsapp-600 {
+    color: #128c7e;
+  }
+}
+
+/* Beige colors for backward compatibility */
+@layer utilities {
+  .bg-beige-100 {
+    background-color: #f3f4f6;
+  }
+  .bg-beige-200 {
+    background-color: #e5e7eb;
+  }
+  .bg-beige-300 {
+    background-color: #d1d5db;
+  }
+  .bg-beige-400 {
+    background-color: #9ca3af;
+  }
+  .bg-beige-500 {
+    background-color: #6b7280;
+  }
+  .bg-beige-600 {
+    background-color: #4b5563;
+  }
+  .bg-beige-700 {
+    background-color: #374151;
+  }
+  .text-beige-600 {
+    color: #4b5563;
+  }
+  .text-beige-700 {
+    color: #374151;
+  }
+  .border-beige-200 {
+    border-color: #e5e7eb;
+  }
+}
+
+/* Elegant colors */
+@layer utilities {
+  .text-elegant-black {
+    color: #1f2937;
+  }
+  .font-elegant {
+    font-family: 'Playfair Display', serif;
+  }
+  .font-modern {
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+/* Animation for floating elements */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Button shine effect */
+.btn-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-shine-active {
+  left: 100%;
+}
