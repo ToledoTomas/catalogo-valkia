@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { PrismaClient } from '../generated/prisma';
+import { v2 as cloudinary } from 'cloudinary';
 
 // Importar rutas
 import productRoutes from './routes/products';
@@ -11,6 +12,13 @@ import authRoutes from './routes/auth';
 
 // Configurar variables de entorno
 dotenv.config();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
 
 const app = express();
 const PORT = process.env.PORT || 3001;

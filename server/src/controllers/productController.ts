@@ -2,6 +2,12 @@ import { Request, Response } from 'express';
 import { prisma } from '../index';
 import { validateDataSafe, createProductSchema, updateProductSchema, paginationSchema, productFiltersSchema } from '../utils/validation';
 import { ApiResponse, PaginatedResponse, Product } from '../types';
+import multer from 'multer';
+import { v2 as cloudinary } from 'cloudinary';
+
+// Configuración de multer para archivos en memoria
+const storage = multer.memoryStorage();
+export const upload = multer({ storage });
 
 export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -14,8 +20,15 @@ export const getAllProducts = async (req: Request, res: Response): Promise<void>
       return;
     }
 
-    const { page = 1, limit = 10 } = paginationResult.data;
-    const skip = (page - 1) * limit;
+    // Si no se especifica limit, devolver todos los productos
+    let limit = paginationResult.data.limit;
+    let page = paginationResult.data.page;
+    if (!('limit' in req.query)) {
+      limit = undefined;
+      page = 1;
+    }
+    page = page || 1;
+    const skip = limit ? (page - 1) * limit : undefined;
 
     // Construir filtros
     const where: any = {};
@@ -52,14 +65,14 @@ export const getAllProducts = async (req: Request, res: Response): Promise<void>
       prisma.product.count({ where })
     ]);
 
-    const totalPages = Math.ceil(total / limit);
+    const totalPages = limit ? Math.ceil(total / limit) : 1;
 
     const response: PaginatedResponse<Product> = {
       success: true,
       data: products,
       pagination: {
-        page,
-        limit,
+        page: page || 1,
+        limit: limit || total,
         total,
         totalPages
       }
@@ -254,6 +267,80 @@ export const deleteProduct = async (req: Request, res: Response): Promise<void> 
     res.json(response);
   } catch (error) {
     console.error('Error deleting product:', error);
+    res.status(500).json({ success: false, error: 'Error interno del servidor' });
+  }
+}; 
+
+export const uploadProductImage = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { productId } = req.body;
+    const file = req.file as Express.Multer.File;
+    if (!productId) {
+      res.status(400).json({ success: false, error: 'Falta productId' });
+      return;
+    }
+    if (!file) {
+      res.status(400).json({ success: false, error: 'No se envió archivo' });
+      return;
+    }
+    // Subir a Cloudinary
+    const uploadResult = await cloudinary.uploader.upload_stream({ resource_type: 'image' }, async (error, result) => {
+      if (error || !result) {
+        res.status(500).json({ success: false, error: 'Error subiendo a Cloudinary' });
+        return;
+      }
+      // Guardar en la base de datos
+      const image = await prisma.images.create({
+        data: {
+          url: result.secure_url,
+          productId
+        }
+      });
+      res.status(201).json({ success: true, url: image.url, image });
+    });
+    // Escribir el buffer del archivo en el stream
+    uploadResult.end(file.buffer);
+  } catch (error) {
+    console.error('Error uploading product image:', error);
+    res.status(500).json({ success: false, error: 'Error interno del servidor' });
+  }
+}; 
+
+export const createProductWithImage = async (req: Request, res: Response) => {
+  try {
+    const { name, description, categoryId, sizes, colors } = req.body;
+    const file = req.file as Express.Multer.File;
+
+    if (!file) {
+      return res.status(400).json({ success: false, error: 'No se envió imagen' });
+    }
+
+    // Sube la imagen a Cloudinary
+    cloudinary.uploader.upload_stream({ resource_type: 'image' }, async (error, result) => {
+      if (error || !result) {
+        return res.status(500).json({ success: false, error: 'Error subiendo a Cloudinary' });
+      }
+
+      // Crea el producto y asocia la imagen
+      const product = await prisma.product.create({
+        data: {
+          name,
+          description,
+          categoryId,
+          sizes: typeof sizes === 'string' ? JSON.parse(sizes) : sizes,
+          colors: typeof colors === 'string' ? JSON.parse(colors) : colors,
+          images: {
+            create: [{ url: result.secure_url }]
+          }
+        },
+        include: { images: true, category: true }
+      });
+
+      res.status(201).json({ success: true, data: product });
+    }).end(file.buffer);
+
+  } catch (error) {
+    console.error('Error creating product with image:', error);
     res.status(500).json({ success: false, error: 'Error interno del servidor' });
   }
 }; 
