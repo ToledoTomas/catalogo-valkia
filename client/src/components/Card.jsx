@@ -11,7 +11,7 @@ export default function Card({ image, title, color, category, alt, sizes = [], c
       </div>
       <div className="p-4">
         <div className="mb-2">
-          <span className="inline-block rounded-full bg-primary-100 px-3 py-1 text-xs font-medium text-primary-800 uppercase tracking-wide">
+          <span className="inline-block rounded-full bg-orange-50 px-3 py-1 text-xs font-medium text-primary-800 uppercase tracking-wide">
             {category}
           </span>
         </div>
