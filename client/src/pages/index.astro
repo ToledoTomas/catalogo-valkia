@@ -6,11 +6,16 @@ import GridCards from '../components/GridCards.astro';
 import Hero from '../components/Hero.astro';
 import Contacto from '../components/Contacto.astro';
 
+// Fetch de productos desde la API
+const apiUrl = import.meta.env.PUBLIC_API_URL || 'http://localhost:3001/api/products';
+const response = await fetch(apiUrl);
+const data = await response.json();
+const products = data.data || [];
 ---
 
 <Layout>
 	<Header/>
     <Hero />
-    <GridCards />
+    <GridCards products={products} />
     <Contacto />
 </Layout>

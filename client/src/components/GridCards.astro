@@ -1,57 +1,19 @@
 ---
 import Card from './Card.astro';
+import FilterIsland from './GridCardsFilterIsland.jsx';
 
-const fashionItems = [
-  {
-    image: '/placeholder.svg?height=400&width=300',
-    title: 'Vestido Floral Elegante',
-    color: 'Pink',
-    category: 'Vestidos'
-  },
-  {
-    image: '/placeholder.svg?height=400&width=300',
-    title: 'Blusa de Seda Premium',
-    color: 'White',
-    category: 'Blusas'
-  },
-  {
-    image: '/placeholder.svg?height=400&width=300',
-    title: 'Falda Plisada Midi',
-    color: 'Black',
-    category: 'Faldas'
-  },
-  {
-    image: '/placeholder.svg?height=400&width=300',
-    title: 'Chaqueta Blazer Moderna',
-    color: 'Blue',
-    category: 'Chaquetas'
-  },
-  {
-    image: '/placeholder.svg?height=400&width=300',
-    title: 'Pantalón de Vestir',
-    color: 'Gray',
-    category: 'Pantalones'
-  },
-  {
-    image: '/placeholder.svg?height=400&width=300',
-    title: 'Top Crop Casual',
-    color: 'Green',
-    category: 'Tops'
-  },
-  {
-    image: '/placeholder.svg?height=400&width=300',
-    title: 'Vestido Cóctel Satinado',
-    color: 'Red',
-    category: 'Vestidos'
-  },
-  {
-    image: '/placeholder.svg?height=400&width=300',
-    title: 'Cardigan Oversize',
-    color: 'Beige',
-    category: 'Cardigans'
-  }
-];
-const categories = Array.from(new Set(fashionItems.map(item => item.category)));
+export interface Product {
+  id: string;
+  name: string;
+  description: string;
+  category: { name: string };
+  colors: string[];
+  sizes: string[];
+  images: { url: string }[];
+}
+
+const { products = [] } = Astro.props;
+const categories: string[] = Array.from(new Set(products.map((item: Product) => item.category.name)));
 ---
 
 <section id="catalogo" class="py-12 bg-primary-50">
@@ -66,26 +28,6 @@ const categories = Array.from(new Set(fashionItems.map(item => item.category)));
       </p>
     </div>
 
-    <div class="flex flex-wrap justify-center gap-2 mb-8">
-      <button 
-        class="px-4 py-2 rounded border border-primary-300 text-primary-700 text-sm cursor-pointer hover:bg-gray-800 hover:text-white hover:border-primary-800 transition-colors duration-200"
-      >Todas</button>
-      {categories.map(category => (
-        <button 
-          class="px-4 py-2 rounded border border-primary-300 text-primary-700 text-sm cursor-pointer hover:bg-gray-800 hover:text-white hover:border-primary-800 transition-colors duration-200"
-        >{category}</button>
-      ))}
-    </div>
-    
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-12">
-      {fashionItems.map((item) => (
-        <Card 
-          image={item.image}
-          title={item.title}
-          color={item.color}
-          category={item.category}
-        />
-      ))}
-    </div>
+    <FilterIsland products={products} categories={categories} client:load />
   </div>
 </section>
