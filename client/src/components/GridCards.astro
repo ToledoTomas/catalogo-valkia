@@ -1,19 +1,5 @@
 ---
-import Card from './Card.astro';
 import FilterIsland from './GridCardsFilterIsland.jsx';
-
-export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  category: { name: string };
-  colors: string[];
-  sizes: string[];
-  images: { url: string }[];
-}
-
-const { products = [] } = Astro.props;
-const categories: string[] = Array.from(new Set(products.map((item: Product) => item.category.name)));
 ---
 
 <section id="catalogo" class="py-12 bg-primary-50">
@@ -23,11 +9,11 @@ const categories: string[] = Array.from(new Set(products.map((item: Product) => 
         Colección Femenina
       </h2>
       <p class="text-lg text-primary-600 max-w-2xl mx-auto">
-        Descubre nuestra exclusiva selección de indumentaria femenina, 
+        Descubre nuestra exclusiva selección de indumentaria femenina,
         diseñada para la mujer moderna y elegante.
       </p>
     </div>
 
-    <FilterIsland products={products} categories={categories} client:load />
+    <FilterIsland client:load />
   </div>
 </section>

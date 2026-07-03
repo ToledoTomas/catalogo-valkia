@@ -5,17 +5,11 @@ import Header from "../components/Header.astro";
 import GridCards from '../components/GridCards.astro';
 import Hero from '../components/Hero.astro';
 import Contacto from '../components/Contacto.astro';
-
-// Fetch de productos desde la API
-const BASE_URL = import.meta.env.PUBLIC_API_URL || 'https://catalogo-valkia.onrender.com';
-const response = await fetch(`${BASE_URL}/api/products`);
-const data = await response.json();
-const products = data.data || [];
 ---
 
 <Layout>
 	<Header/>
     <Hero />
-    <GridCards products={products} />
+    <GridCards />
     <Contacto />
 </Layout>
