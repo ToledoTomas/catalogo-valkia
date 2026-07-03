@@ -1,5 +1,62 @@
 import { useState, useRef } from 'react';
 
+// Los colores se cargan en español; CSS solo entiende nombres en inglés,
+// así que mapeamos los más comunes a un hex. Si no está en el mapa, se usa
+// el valor tal cual (por si cargaron un color en inglés o un hex).
+const COLOR_MAP = {
+  blanco: '#ffffff',
+  negro: '#111111',
+  gris: '#9ca3af',
+  plateado: '#c0c0c0',
+  dorado: '#d4af37',
+  rojo: '#dc2626',
+  bordo: '#7b1113',
+  vino: '#722f37',
+  rosa: '#f9a8d4',
+  rosado: '#f9a8d4',
+  fucsia: '#d946ef',
+  naranja: '#f97316',
+  oxido: '#b7410e',
+  ladrillo: '#a63a24',
+  terracota: '#c56a4e',
+  amarillo: '#facc15',
+  mostaza: '#d4a017',
+  verde: '#16a34a',
+  verdemilitar: '#4b5320',
+  verdeagua: '#7fdbb6',
+  oliva: '#808000',
+  azul: '#2563eb',
+  azulmarino: '#1e3a5f',
+  celeste: '#7dd3fc',
+  turquesa: '#40e0d0',
+  violeta: '#7c3aed',
+  lila: '#c4b5fd',
+  morado: '#7c3aed',
+  purpura: '#7c3aed',
+  marron: '#8b4513',
+  cafe: '#6f4e37',
+  chocolate: '#5b3a29',
+  camel: '#c19a6b',
+  beige: '#f5f5dc',
+  crema: '#fffdd0',
+  arena: '#e0cda9',
+  nude: '#e3bc9a',
+  tostado: '#c99a6a',
+  coral: '#ff7f50',
+  salmon: '#fa8072'
+};
+
+function colorToCss(name) {
+  if (!name) return '#e5e7eb';
+  const key = name
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '') // saca acentos: "óxido" -> "oxido"
+    .replace(/\s+/g, ''); // saca espacios: "azul marino" -> "azulmarino"
+  return COLOR_MAP[key] || name.toLowerCase().trim();
+}
+
 export default function Card({ images = [], title, category, alt, sizes = [], colors = [] }) {
   const list = images.length > 0 ? images : [{ url: '/placeholder.svg' }];
   const [active, setActive] = useState(0);
@@ -74,7 +131,8 @@ export default function Card({ images = [], title, category, alt, sizes = [], co
               <div
                 key={i}
                 className="w-4 h-4 rounded-full border-2 border-primary-200"
-                style={{ backgroundColor: c.toLowerCase() }}
+                style={{ backgroundColor: colorToCss(c) }}
+                title={c}
               ></div>
             )) : <span className="text-sm font-medium text-primary-800 capitalize">N/A</span>}
           </div>
