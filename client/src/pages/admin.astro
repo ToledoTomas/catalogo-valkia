@@ -1,0 +1,9 @@
+---
+import Layout from '../layouts/Layout.astro';
+import "../styles/global.css";
+import AdminPanel from '../components/AdminPanel.jsx';
+---
+
+<Layout>
+  <AdminPanel client:only="react" />
+</Layout>
