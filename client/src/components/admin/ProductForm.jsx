@@ -11,6 +11,7 @@ export default function ProductForm() {
   const [sizes, setSizes] = useState([]);
   const [colors, setColors] = useState([]);
   const [files, setFiles] = useState([]); // File[]
+  const [previews, setPreviews] = useState([]); // string[] object URLs
   const [error, setError] = useState('');
   const [ok, setOk] = useState('');
   const [saving, setSaving] = useState(false);
@@ -52,11 +53,16 @@ export default function ProductForm() {
   }
 
   function onFilesChange(e) {
-    setFiles(Array.from(e.target.files || []));
+    const list = Array.from(e.target.files || []);
+    previews.forEach((u) => URL.revokeObjectURL(u));
+    setFiles(list);
+    setPreviews(list.map((f) => URL.createObjectURL(f)));
   }
 
   function removeFile(index) {
+    URL.revokeObjectURL(previews[index]);
     setFiles((prev) => prev.filter((_, i) => i !== index));
+    setPreviews((prev) => prev.filter((_, i) => i !== index));
   }
 
   async function handleSubmit(e) {
@@ -89,7 +95,9 @@ export default function ProductForm() {
       setDescription('');
       setSizes([]);
       setColors([]);
+      previews.forEach((u) => URL.revokeObjectURL(u));
       setFiles([]);
+      setPreviews([]);
       setOk('Producto creado ✓');
     } catch (err) {
       setError('Error al crear el producto');
@@ -144,6 +152,12 @@ export default function ProductForm() {
             type="text"
             value={newCategory}
             onChange={(e) => setNewCategory(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                addCategory();
+              }
+            }}
             placeholder="Nueva categoría"
             className="flex-1 rounded border border-gray-300 px-3 py-2 text-sm"
           />
@@ -168,7 +182,7 @@ export default function ProductForm() {
             {files.map((f, i) => (
               <div key={i} className="relative">
                 <img
-                  src={URL.createObjectURL(f)}
+                  src={previews[i]}
                   alt={f.name}
                   className="h-20 w-20 rounded object-cover"
                 />

@@ -12,6 +12,9 @@ export default function AdminPanel() {
   useEffect(() => {
     setAuthed(!!getToken());
     setReady(true);
+    const onUnauthorized = () => setAuthed(false);
+    window.addEventListener('valkia-unauthorized', onUnauthorized);
+    return () => window.removeEventListener('valkia-unauthorized', onUnauthorized);
   }, []);
 
   if (!ready) return null;

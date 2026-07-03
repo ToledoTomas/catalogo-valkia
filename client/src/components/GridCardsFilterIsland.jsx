@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Card from './Card.jsx';
-
-const BASE_URL = import.meta.env.PUBLIC_API_URL || 'https://catalogo-valkia.onrender.com';
+import { BASE_URL } from '../lib/api.js';
 
 export default function FilterIsland() {
   const [products, setProducts] = useState([]);

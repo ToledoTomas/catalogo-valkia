@@ -16,6 +16,9 @@ export async function apiFetch(path, options = {}) {
 
   if (res.status === 401 || res.status === 403) {
     clearToken();
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('valkia-unauthorized'));
+    }
     throw new Error('UNAUTHORIZED');
   }
   return res;
