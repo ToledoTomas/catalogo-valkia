@@ -45,9 +45,8 @@ export default function FilterIsland() {
         {filteredProducts.map((item) => (
           <Card
             key={item.id}
-            image={item.images[0]?.url || '/placeholder.svg'}
+            images={item.images}
             title={item.name}
-            color={item.colors[0] || 'N/A'}
             category={item.category.name}
             sizes={item.sizes}
             colors={item.colors}
