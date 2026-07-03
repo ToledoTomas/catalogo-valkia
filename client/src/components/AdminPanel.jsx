@@ -3,11 +3,13 @@ import { getToken, clearToken } from '../lib/api.js';
 import LoginForm from './admin/LoginForm.jsx';
 import ProductList from './admin/ProductList.jsx';
 import ProductForm from './admin/ProductForm.jsx';
+import ProductEdit from './admin/ProductEdit.jsx';
 
 export default function AdminPanel() {
   const [authed, setAuthed] = useState(false);
   const [ready, setReady] = useState(false);
-  const [view, setView] = useState('list'); // 'list' | 'create'
+  const [view, setView] = useState('list'); // 'list' | 'create' | 'edit'
+  const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
     setAuthed(!!getToken());
@@ -25,6 +27,11 @@ export default function AdminPanel() {
 
   const tabClass = (active) =>
     `px-4 py-2 rounded text-sm ${active ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`;
+
+  function startEdit(id) {
+    setEditingId(id);
+    setView('edit');
+  }
 
   return (
     <div className="min-h-screen bg-primary-50">
@@ -49,7 +56,9 @@ export default function AdminPanel() {
             </button>
           </div>
         </div>
-        {view === 'list' ? <ProductList /> : <ProductForm />}
+        {view === 'list' && <ProductList onEdit={startEdit} />}
+        {view === 'create' && <ProductForm />}
+        {view === 'edit' && <ProductEdit productId={editingId} onBack={() => setView('list')} />}
       </div>
     </div>
   );

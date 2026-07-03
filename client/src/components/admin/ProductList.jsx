@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { apiFetch } from '../../lib/api.js';
 
-export default function ProductList() {
+export default function ProductList({ onEdit }) {
   const [products, setProducts] = useState([]);
   const [selected, setSelected] = useState(new Set());
   const [loading, setLoading] = useState(true);
@@ -103,6 +103,13 @@ export default function ProductList() {
                 <p className="font-medium text-gray-800 truncate">{p.name}</p>
                 <p className="text-sm text-gray-500">{p.category?.name}</p>
               </div>
+              <button
+                type="button"
+                onClick={() => onEdit(p.id)}
+                className="rounded border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-100"
+              >
+                Editar
+              </button>
             </li>
           ))}
         </ul>
