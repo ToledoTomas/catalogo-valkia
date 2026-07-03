@@ -436,3 +436,60 @@ export const createProductWithImages = async (req: Request, res: Response): Prom
     res.status(500).json({ success: false, error: 'Error interno del servidor' });
   }
 };
+
+export const addProductImages = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const files = (req.files as Express.Multer.File[]) || [];
+
+    if (files.length === 0) {
+      res.status(400).json({ success: false, error: 'No se enviaron imágenes' });
+      return;
+    }
+
+    const existing = await prisma.product.findUnique({ where: { id } });
+    if (!existing) {
+      res.status(404).json({ success: false, error: 'Producto no encontrado' });
+      return;
+    }
+
+    const urls = await Promise.all(files.map((f) => uploadToCloudinary(f.buffer)));
+
+    await prisma.images.createMany({
+      data: urls.map((url) => ({ url, productId: id }))
+    });
+
+    const product = await prisma.product.findUnique({
+      where: { id },
+      include: { category: true, images: true }
+    });
+
+    res.status(201).json({
+      success: true,
+      data: product,
+      message: 'Imágenes agregadas exitosamente'
+    });
+  } catch (error) {
+    console.error('Error adding product images:', error);
+    res.status(500).json({ success: false, error: 'Error interno del servidor' });
+  }
+};
+
+export const deleteProductImage = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { imageId } = req.params;
+
+    const image = await prisma.images.findUnique({ where: { id: imageId } });
+    if (!image) {
+      res.status(404).json({ success: false, error: 'Imagen no encontrada' });
+      return;
+    }
+
+    await prisma.images.delete({ where: { id: imageId } });
+
+    res.json({ success: true, message: 'Imagen eliminada exitosamente' });
+  } catch (error) {
+    console.error('Error deleting product image:', error);
+    res.status(500).json({ success: false, error: 'Error interno del servidor' });
+  }
+};

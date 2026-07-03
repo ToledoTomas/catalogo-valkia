@@ -8,7 +8,9 @@ import {
   upload,
   uploadProductImage,
   createProductWithImage,
-  createProductWithImages
+  createProductWithImages,
+  addProductImages,
+  deleteProductImage
 } from '../controllers/productController';
 import { authenticateToken } from '../middleware/auth';
 
@@ -21,6 +23,11 @@ router.get('/:id', getProductById);
 // Rutas protegidas (requieren autenticación)
 router.post('/', authenticateToken, createProduct);
 router.put('/:id', authenticateToken, updateProduct);
+
+// Imágenes de un producto existente (edición)
+router.post('/:id/images', authenticateToken, upload.array('images', 10), addProductImages);
+router.delete('/images/:imageId', authenticateToken, deleteProductImage);
+
 router.delete('/:id', authenticateToken, deleteProduct);
 
 // Ruta para subir imagen de producto
