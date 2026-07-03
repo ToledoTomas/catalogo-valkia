@@ -9,6 +9,23 @@ import { v2 as cloudinary } from 'cloudinary';
 const storage = multer.memoryStorage();
 export const upload = multer({ storage });
 
+// Sube un buffer a Cloudinary y devuelve la secure_url (versión promisificada)
+function uploadToCloudinary(buffer: Buffer): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { resource_type: 'image' },
+      (error, result) => {
+        if (error || !result) {
+          reject(error || new Error('Cloudinary no devolvió resultado'));
+          return;
+        }
+        resolve(result.secure_url);
+      }
+    );
+    stream.end(buffer);
+  });
+}
+
 export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
   try {
     // Validar parámetros de paginación y filtros
@@ -343,4 +360,79 @@ export const createProductWithImage = async (req: Request, res: Response) => {
     console.error('Error creating product with image:', error);
     res.status(500).json({ success: false, error: 'Error interno del servidor' });
   }
-}; 
+};
+
+export const createProductWithImages = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { name, description, categoryId } = req.body;
+    const files = (req.files as Express.Multer.File[]) || [];
+
+    // sizes/colors llegan como JSON string (o array); normalizar a string[]
+    const parseArray = (val: unknown): string[] => {
+      if (Array.isArray(val)) return val as string[];
+      if (typeof val === 'string') {
+        try {
+          const parsed = JSON.parse(val);
+          return Array.isArray(parsed) ? parsed : (val ? [val] : []);
+        } catch {
+          return val ? [val] : [];
+        }
+      }
+      return [];
+    };
+    const sizes = parseArray(req.body.sizes);
+    const colors = parseArray(req.body.colors);
+
+    // Validar campos de texto (las imágenes son archivos, no URLs)
+    const validation = validateDataSafe(createProductSchema.omit({ images: true }), {
+      name,
+      description,
+      categoryId,
+      sizes,
+      colors
+    });
+    if (!validation.success) {
+      res.status(400).json({ success: false, error: validation.error });
+      return;
+    }
+
+    if (files.length === 0) {
+      res.status(400).json({ success: false, error: 'Se requiere al menos una imagen' });
+      return;
+    }
+
+    // Verificar que la categoría existe
+    const category = await prisma.category.findUnique({ where: { id: categoryId } });
+    if (!category) {
+      res.status(400).json({ success: false, error: 'Categoría no encontrada' });
+      return;
+    }
+
+    // Subir todas las imágenes a Cloudinary
+    const urls = await Promise.all(files.map((f) => uploadToCloudinary(f.buffer)));
+
+    // Crear producto + imágenes en una transacción
+    const product = await prisma.$transaction(async (tx) => {
+      return tx.product.create({
+        data: {
+          name: validation.data.name,
+          description: validation.data.description,
+          categoryId: validation.data.categoryId,
+          sizes: validation.data.sizes,
+          colors: validation.data.colors,
+          images: { create: urls.map((url) => ({ url })) }
+        },
+        include: { category: true, images: true }
+      });
+    });
+
+    res.status(201).json({
+      success: true,
+      data: product,
+      message: 'Producto creado exitosamente'
+    });
+  } catch (error) {
+    console.error('Error creating product with images:', error);
+    res.status(500).json({ success: false, error: 'Error interno del servidor' });
+  }
+};

@@ -7,7 +7,8 @@ import {
   deleteProduct,
   upload,
   uploadProductImage,
-  createProductWithImage
+  createProductWithImage,
+  createProductWithImages
 } from '../controllers/productController';
 import { authenticateToken } from '../middleware/auth';
 
@@ -28,4 +29,7 @@ router.post('/upload-image', authenticateToken, upload.single('image'), uploadPr
 // Ruta para crear producto con imagen en un solo paso
 router.post('/with-image', authenticateToken, upload.single('image'), createProductWithImage);
 
-export default router; 
+// Ruta para crear producto con varias imágenes en un solo paso
+router.post('/with-images', authenticateToken, upload.array('images', 10), createProductWithImages);
+
+export default router;
