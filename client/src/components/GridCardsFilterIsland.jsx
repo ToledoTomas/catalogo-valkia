@@ -7,6 +7,7 @@ export default function FilterIsland() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('Todas');
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     fetch(`${BASE_URL}/api/products`)
@@ -16,15 +17,27 @@ export default function FilterIsland() {
       .finally(() => setLoading(false));
   }, []);
 
+  // Escucha el buscador del header y filtra en el cliente.
+  useEffect(() => {
+    const handler = (e) => setSearch(e.detail || '');
+    window.addEventListener('valkia-search', handler);
+    return () => window.removeEventListener('valkia-search', handler);
+  }, []);
+
   if (loading) return <p className="text-center text-primary-600 py-12">Cargando productos…</p>;
   if (error) return <p className="text-center text-red-500 py-12">No se pudieron cargar los productos.</p>;
   if (products.length === 0) return <p className="text-center text-primary-600 py-12">Todavía no hay productos.</p>;
 
   const categories = Array.from(new Set(products.map((item) => item.category.name)));
-  const filteredProducts =
-    selectedCategory === 'Todas'
-      ? products
-      : products.filter((item) => item.category.name === selectedCategory);
+  const q = search.trim().toLowerCase();
+  const filteredProducts = products.filter((item) => {
+    const matchesCategory = selectedCategory === 'Todas' || item.category.name === selectedCategory;
+    const matchesSearch =
+      !q ||
+      item.name.toLowerCase().includes(q) ||
+      (item.description || '').toLowerCase().includes(q);
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <>
@@ -41,18 +54,22 @@ export default function FilterIsland() {
           >{category}</button>
         ))}
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-12">
-        {filteredProducts.map((item) => (
-          <Card
-            key={item.id}
-            images={item.images}
-            title={item.name}
-            category={item.category.name}
-            sizes={item.sizes}
-            colors={item.colors}
-          />
-        ))}
-      </div>
+      {filteredProducts.length === 0 ? (
+        <p className="text-center text-primary-600 py-12">No se encontraron productos.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-12">
+          {filteredProducts.map((item) => (
+            <Card
+              key={item.id}
+              images={item.images}
+              title={item.name}
+              category={item.category.name}
+              sizes={item.sizes}
+              colors={item.colors}
+            />
+          ))}
+        </div>
+      )}
     </>
   );
 }
