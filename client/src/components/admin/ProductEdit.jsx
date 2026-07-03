@@ -36,6 +36,10 @@ export default function ProductEdit({ productId, onBack }) {
     try {
       const res = await apiFetch(`/api/products/${productId}`);
       const data = await res.json();
+      if (!res.ok || !data.success) {
+        setError(data.error || 'No se pudo cargar el producto');
+        return;
+      }
       const p = data.data;
       setName(p.name);
       setDescription(p.description);
@@ -101,6 +105,8 @@ export default function ProductEdit({ productId, onBack }) {
 
   async function removeImage(imageId) {
     if (!confirm('¿Quitar esta foto?')) return;
+    setError('');
+    setOk('');
     try {
       const res = await apiFetch(`/api/products/images/${imageId}`, { method: 'DELETE' });
       const data = await res.json();
@@ -108,7 +114,7 @@ export default function ProductEdit({ productId, onBack }) {
         setError(data.error || 'No se pudo quitar la foto');
         return;
       }
-      await loadProduct();
+      setImages((prev) => prev.filter((img) => img.id !== imageId));
     } catch (e) {
       setError('No se pudo quitar la foto');
     }
@@ -118,6 +124,7 @@ export default function ProductEdit({ productId, onBack }) {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
     setError('');
+    setOk('');
     try {
       const fd = new FormData();
       files.forEach((f) => fd.append('images', f));
@@ -127,7 +134,7 @@ export default function ProductEdit({ productId, onBack }) {
         setError(data.error || 'No se pudieron agregar las fotos');
         return;
       }
-      await loadProduct();
+      setImages(data.data.images || []);
     } catch (err) {
       setError('No se pudieron agregar las fotos');
     } finally {
