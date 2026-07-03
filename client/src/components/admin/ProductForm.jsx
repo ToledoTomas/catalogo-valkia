@@ -176,7 +176,16 @@ export default function ProductForm() {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Fotos</label>
-        <input type="file" accept="image/*" multiple onChange={onFilesChange} />
+        <label className="flex flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed border-gray-300 px-4 py-6 text-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition-colors">
+          <svg className="w-6 h-6 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          <span className="text-sm font-medium text-gray-700">Subir fotos</span>
+          <span className="text-xs text-gray-400">Elegí una o varias imágenes</span>
+          <input type="file" accept="image/*" multiple onChange={onFilesChange} className="hidden" />
+        </label>
         {files.length > 0 && (
           <div className="flex flex-wrap gap-3 mt-3">
             {files.map((f, i) => (
