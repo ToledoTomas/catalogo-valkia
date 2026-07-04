@@ -1,4 +1,4 @@
-<section class="relative h-screen min-h-[600px] overflow-hidden flex items-center">
+<section class="relative h-[70vh] min-h-[460px] md:h-screen md:min-h-[600px] overflow-hidden flex items-center">
     <!-- Background Image -->
     <div class="absolute inset-0 z-0">
       <img
@@ -6,8 +6,8 @@
         alt="Indumentaria femenina Valkia"
         class="w-full h-full object-cover object-center"
       />
-      <!-- Overlay: gradiente cálido, más opaco a la izquierda para legibilidad, transparente a la derecha para no tapar la ropa -->
-      <div class="absolute inset-0 bg-gradient-to-r from-stone-100/90 via-stone-100/50 to-transparent"></div>
+      <!-- Overlay: en desktop gradiente cálido izquierda→derecha; en mobile vertical para que el texto se lea sin tapar tanto la foto -->
+      <div class="absolute inset-0 bg-gradient-to-r from-stone-100/90 via-stone-100/50 to-transparent max-md:bg-gradient-to-t max-md:from-stone-100/95 max-md:via-stone-100/60 max-md:to-stone-100/20"></div>
     </div>
 
     <!-- Content -->
