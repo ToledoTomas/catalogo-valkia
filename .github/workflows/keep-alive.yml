@@ -1,0 +1,27 @@
+name: Keep backend awake
+
+# Evita el "cold start" de Render (plan free): le pega al /health del backend
+# cada 10 minutos para que no se duerma tras ~15 min de inactividad.
+# El repo es público, así que estos minutos de Actions son gratis.
+
+on:
+  schedule:
+    - cron: '*/10 * * * *' # cada 10 minutos
+  workflow_dispatch: {} # permite ejecutarlo a mano desde la pestaña Actions
+
+# Si un ping se solapa con otro (por un cold start lento), no acumular corridas.
+concurrency:
+  group: keep-alive
+  cancel-in-progress: true
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping /health
+        run: |
+          echo "Pinging backend health endpoint..."
+          curl -sS --fail --retry 2 --retry-delay 15 --max-time 90 \
+            https://catalogo-valkia.onrender.com/health
+          echo ""
+          echo "Backend despierto ✅"
