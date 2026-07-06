@@ -3,6 +3,7 @@ export interface Product {
   id: string;
   name: string;
   description: string;
+  price: number;
   categoryId: string;
   sizes: string[];
   colors: string[];
@@ -69,6 +70,7 @@ export interface LoginResponse {
 export interface CreateProductRequest {
   name: string;
   description: string;
+  price: number;
   categoryId: string;
   sizes: string[];
   colors: string[];

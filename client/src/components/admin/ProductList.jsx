@@ -102,6 +102,9 @@ export default function ProductList({ onEdit }) {
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-gray-800 truncate">{p.name}</p>
                 <p className="text-sm text-gray-500">{p.category?.name}</p>
+                <p className="text-sm font-semibold text-gray-700">
+                  ${Number(p.price ?? 0).toLocaleString('es-AR')}
+                </p>
               </div>
               <button
                 type="button"
