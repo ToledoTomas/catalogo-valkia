@@ -344,7 +344,7 @@ export const createProductWithImage = async (req: Request, res: Response) => {
         data: {
           name,
           description,
-          price: parseInt(price, 10) || 0,
+          price: Math.max(0, parseInt(price, 10) || 0),
           categoryId,
           sizes: typeof sizes === 'string' ? JSON.parse(sizes) : sizes,
           colors: typeof colors === 'string' ? JSON.parse(colors) : colors,
