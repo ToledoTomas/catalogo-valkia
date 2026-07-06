@@ -4,6 +4,7 @@ import { z } from 'zod';
 export const createProductSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido').max(100, 'El nombre es muy largo'),
   description: z.string().min(1, 'La descripción es requerida').max(1000, 'La descripción es muy larga'),
+  price: z.coerce.number({ invalid_type_error: 'El precio debe ser un número' }).int('El precio debe ser un número entero').nonnegative('El precio no puede ser negativo'),
   categoryId: z.string().uuid('ID de categoría inválido'),
   sizes: z.array(z.string()).min(1, 'Al menos un tamaño es requerido'),
   colors: z.array(z.string()).min(1, 'Al menos un color es requerido'),
