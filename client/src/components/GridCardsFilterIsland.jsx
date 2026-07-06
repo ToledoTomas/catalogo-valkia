@@ -66,6 +66,7 @@ export default function FilterIsland() {
               category={item.category.name}
               sizes={item.sizes}
               colors={item.colors}
+              price={item.price}
             />
           ))}
         </div>
