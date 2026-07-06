@@ -72,6 +72,7 @@ async function main() {
         {
           name: 'Camiseta Básica',
           description: 'Camiseta de algodón 100% con diseño minimalista',
+          price: 15000,
           categoryId: ropaCategory.id,
           sizes: ['S', 'M', 'L', 'XL'],
           colors: ['Blanco', 'Negro', 'Gris'],
@@ -83,6 +84,7 @@ async function main() {
         {
           name: 'Jeans Clásicos',
           description: 'Jeans de alta calidad con corte clásico',
+          price: 38000,
           categoryId: ropaCategory.id,
           sizes: ['28', '30', '32', '34', '36'],
           colors: ['Azul', 'Negro'],
