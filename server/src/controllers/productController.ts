@@ -158,6 +158,7 @@ export const createProduct = async (req: Request, res: Response): Promise<void> 
         data: {
           name: productData.name,
           description: productData.description,
+          price: productData.price,
           categoryId: productData.categoryId,
           sizes: productData.sizes,
           colors: productData.colors
@@ -325,7 +326,7 @@ export const uploadProductImage = async (req: Request, res: Response): Promise<v
 
 export const createProductWithImage = async (req: Request, res: Response) => {
   try {
-    const { name, description, categoryId, sizes, colors } = req.body;
+    const { name, description, price, categoryId, sizes, colors } = req.body;
     const file = req.file as Express.Multer.File;
 
     if (!file) {
@@ -343,6 +344,7 @@ export const createProductWithImage = async (req: Request, res: Response) => {
         data: {
           name,
           description,
+          price: parseInt(price, 10) || 0,
           categoryId,
           sizes: typeof sizes === 'string' ? JSON.parse(sizes) : sizes,
           colors: typeof colors === 'string' ? JSON.parse(colors) : colors,
@@ -364,7 +366,7 @@ export const createProductWithImage = async (req: Request, res: Response) => {
 
 export const createProductWithImages = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, description, categoryId } = req.body;
+    const { name, description, price, categoryId } = req.body;
     const files = (req.files as Express.Multer.File[]) || [];
 
     // sizes/colors llegan como JSON string (o array); normalizar a string[]
@@ -387,6 +389,7 @@ export const createProductWithImages = async (req: Request, res: Response): Prom
     const validation = validateDataSafe(createProductSchema.omit({ images: true }), {
       name,
       description,
+      price,
       categoryId,
       sizes,
       colors
@@ -417,6 +420,7 @@ export const createProductWithImages = async (req: Request, res: Response): Prom
         data: {
           name: validation.data.name,
           description: validation.data.description,
+          price: validation.data.price,
           categoryId: validation.data.categoryId,
           sizes: validation.data.sizes,
           colors: validation.data.colors,
