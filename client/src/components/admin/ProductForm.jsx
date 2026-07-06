@@ -5,6 +5,7 @@ import TagInput from './TagInput.jsx';
 export default function ProductForm() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('');
   const [categories, setCategories] = useState([]);
   const [categoryId, setCategoryId] = useState('');
   const [newCategory, setNewCategory] = useState('');
@@ -70,6 +71,7 @@ export default function ProductForm() {
     setError('');
     setOk('');
     if (!categoryId) return setError('Elegí una categoría');
+    if (!price || Number(price) <= 0) return setError('Ingresá un precio válido');
     if (sizes.length === 0) return setError('Agregá al menos un talle');
     if (colors.length === 0) return setError('Agregá al menos un color');
     if (files.length === 0) return setError('Agregá al menos una foto');
@@ -79,6 +81,7 @@ export default function ProductForm() {
       const fd = new FormData();
       fd.append('name', name);
       fd.append('description', description);
+      fd.append('price', String(price));
       fd.append('categoryId', categoryId);
       fd.append('sizes', JSON.stringify(sizes));
       fd.append('colors', JSON.stringify(colors));
@@ -93,6 +96,7 @@ export default function ProductForm() {
       // reset para el próximo alta
       setName('');
       setDescription('');
+      setPrice('');
       setSizes([]);
       setColors([]);
       previews.forEach((u) => URL.revokeObjectURL(u));
@@ -129,6 +133,20 @@ export default function ProductForm() {
           onChange={(e) => setDescription(e.target.value)}
           required
           rows={3}
+          className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Precio (ARS)</label>
+        <input
+          type="number"
+          min="0"
+          step="1"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+          required
+          placeholder="Ej: 15000"
           className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
         />
       </div>
