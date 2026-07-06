@@ -81,7 +81,7 @@ export default function ProductForm() {
       const fd = new FormData();
       fd.append('name', name);
       fd.append('description', description);
-      fd.append('price', String(price));
+      fd.append('price', price);
       fd.append('categoryId', categoryId);
       fd.append('sizes', JSON.stringify(sizes));
       fd.append('colors', JSON.stringify(colors));

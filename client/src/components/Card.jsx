@@ -116,7 +116,7 @@ export default function Card({ images = [], title, category, alt, sizes = [], co
         <h3 className="text-lg font-semibold text-primary-900 mb-2 line-clamp-2">
           {title}
         </h3>
-        {price != null && price !== '' && (
+        {price > 0 && (
           <p className="text-lg font-bold text-primary-900 mb-2">
             ${Number(price).toLocaleString('es-AR')}
           </p>
