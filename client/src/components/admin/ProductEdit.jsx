@@ -5,6 +5,7 @@ import TagInput from './TagInput.jsx';
 export default function ProductEdit({ productId, onBack }) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('');
   const [categories, setCategories] = useState([]);
   const [categoryId, setCategoryId] = useState('');
   const [newCategory, setNewCategory] = useState('');
@@ -43,6 +44,7 @@ export default function ProductEdit({ productId, onBack }) {
       const p = data.data;
       setName(p.name);
       setDescription(p.description);
+      setPrice(p.price ?? '');
       setCategoryId(p.categoryId);
       setSizes(p.sizes || []);
       setColors(p.colors || []);
@@ -81,6 +83,7 @@ export default function ProductEdit({ productId, onBack }) {
     setError('');
     setOk('');
     if (!categoryId) return setError('Elegí una categoría');
+    if (!price || Number(price) <= 0) return setError('Ingresá un precio válido');
     if (sizes.length === 0) return setError('Agregá al menos un talle');
     if (colors.length === 0) return setError('Agregá al menos un color');
     setSaving(true);
@@ -88,7 +91,7 @@ export default function ProductEdit({ productId, onBack }) {
       const res = await apiFetch(`/api/products/${productId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, description, categoryId, sizes, colors })
+        body: JSON.stringify({ name, description, price: Number(price), categoryId, sizes, colors })
       });
       const data = await res.json();
       if (!res.ok || !data.success) {
@@ -172,6 +175,20 @@ export default function ProductEdit({ productId, onBack }) {
             onChange={(e) => setDescription(e.target.value)}
             required
             rows={3}
+            className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Precio (ARS)</label>
+          <input
+            type="number"
+            min="0"
+            step="1"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            required
+            placeholder="Ej: 15000"
             className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
           />
         </div>
