@@ -57,7 +57,7 @@ function colorToCss(name) {
   return COLOR_MAP[key] || name.toLowerCase().trim();
 }
 
-export default function Card({ images = [], title, category, alt, sizes = [], colors = [] }) {
+export default function Card({ images = [], title, category, alt, sizes = [], colors = [], price }) {
   const list = images.length > 0 ? images : [{ url: '/placeholder.svg' }];
   const [active, setActive] = useState(0);
   const scrollerRef = useRef(null);
@@ -116,6 +116,11 @@ export default function Card({ images = [], title, category, alt, sizes = [], co
         <h3 className="text-lg font-semibold text-primary-900 mb-2 line-clamp-2">
           {title}
         </h3>
+        {price != null && price !== '' && (
+          <p className="text-lg font-bold text-primary-900 mb-2">
+            ${Number(price).toLocaleString('es-AR')}
+          </p>
+        )}
         {/* Talles */}
         <div className="flex items-center gap-2 mb-2">
           <span className="text-sm text-primary-600">Talles:</span>
