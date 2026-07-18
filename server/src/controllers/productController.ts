@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { prisma } from '../index';
 import { validateDataSafe, createProductSchema, updateProductSchema, paginationSchema, productFiltersSchema } from '../utils/validation';
 import { ApiResponse, PaginatedResponse, Product } from '../types';
+import { triggerDeploy } from '../utils/deployHook';
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
 
@@ -194,6 +195,7 @@ export const createProduct = async (req: Request, res: Response): Promise<void> 
       message: 'Producto creado exitosamente'
     };
 
+    triggerDeploy(`producto creado: ${product!.name}`);
     res.status(201).json(response);
   } catch (error) {
     console.error('Error creating product:', error);
@@ -251,6 +253,7 @@ export const updateProduct = async (req: Request, res: Response): Promise<void> 
       message: 'Producto actualizado exitosamente'
     };
 
+    triggerDeploy(`producto actualizado: ${product.name}`);
     res.json(response);
   } catch (error) {
     console.error('Error updating product:', error);
@@ -282,6 +285,7 @@ export const deleteProduct = async (req: Request, res: Response): Promise<void> 
       message: 'Producto eliminado exitosamente'
     };
 
+    triggerDeploy(`producto eliminado: ${product.name}`);
     res.json(response);
   } catch (error) {
     console.error('Error deleting product:', error);
@@ -314,6 +318,7 @@ export const uploadProductImage = async (req: Request, res: Response): Promise<v
           productId
         }
       });
+      triggerDeploy(`imagen agregada a producto ${productId}`);
       res.status(201).json({ success: true, url: image.url, image });
     });
     // Escribir el buffer del archivo en el stream
@@ -355,6 +360,7 @@ export const createProductWithImage = async (req: Request, res: Response) => {
         include: { images: true, category: true }
       });
 
+      triggerDeploy(`producto creado (con imagen): ${product.name}`);
       res.status(201).json({ success: true, data: product });
     }).end(file.buffer);
 
@@ -430,6 +436,7 @@ export const createProductWithImages = async (req: Request, res: Response): Prom
       });
     });
 
+    triggerDeploy(`producto creado (con imágenes): ${product.name}`);
     res.status(201).json({
       success: true,
       data: product,
@@ -468,6 +475,7 @@ export const addProductImages = async (req: Request, res: Response): Promise<voi
       include: { category: true, images: true }
     });
 
+    triggerDeploy(`imágenes agregadas a producto ${id}`);
     res.status(201).json({
       success: true,
       data: product,
@@ -491,6 +499,7 @@ export const deleteProductImage = async (req: Request, res: Response): Promise<v
 
     await prisma.images.delete({ where: { id: imageId } });
 
+    triggerDeploy(`imagen eliminada: ${imageId}`);
     res.json({ success: true, message: 'Imagen eliminada exitosamente' });
   } catch (error) {
     console.error('Error deleting product image:', error);

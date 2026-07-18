@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { prisma } from '../index';
 import { validateDataSafe, createCategorySchema, updateCategorySchema } from '../utils/validation';
 import { ApiResponse, Category } from '../types';
+import { triggerDeploy } from '../utils/deployHook';
 
 export const getAllCategories = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -154,6 +155,8 @@ export const updateCategory = async (req: Request, res: Response): Promise<void>
       message: 'Categoría actualizada exitosamente'
     };
 
+    // El nombre de categoría se muestra como filtro en el catálogo público.
+    triggerDeploy(`categoría actualizada: ${category.name}`);
     res.json(response);
   } catch (error) {
     console.error('Error updating category:', error);
