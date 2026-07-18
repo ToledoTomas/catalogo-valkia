@@ -2,18 +2,26 @@ import { useState, useEffect } from 'react';
 import Card from './Card.jsx';
 import { BASE_URL } from '../lib/api.js';
 
-export default function FilterIsland() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function FilterIsland({ initialProducts = [] }) {
+  const [products, setProducts] = useState(initialProducts);
+  // Si el build ya trajo productos, no mostramos "Cargando…": pintamos de una.
+  const [loading, setLoading] = useState(initialProducts.length === 0);
   const [error, setError] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('Todas');
   const [search, setSearch] = useState('');
 
+  // Refresca en segundo plano: los productos incrustados en el build pueden
+  // estar desactualizados. Si ya teníamos datos del build, un fallo de red
+  // (p. ej. el backend dormido en Render) no rompe la vista.
   useEffect(() => {
     fetch(`${BASE_URL}/api/products`)
       .then((r) => r.json())
-      .then((d) => setProducts(d.data || []))
-      .catch(() => setError(true))
+      .then((d) => {
+        if (Array.isArray(d.data)) setProducts(d.data);
+      })
+      .catch(() => {
+        if (initialProducts.length === 0) setError(true);
+      })
       .finally(() => setLoading(false));
   }, []);
 

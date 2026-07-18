@@ -1,5 +1,27 @@
 ---
 import FilterIsland from './GridCardsFilterIsland.jsx';
+
+const API_URL = import.meta.env.PUBLIC_API_URL || 'https://catalogo-valkia.onrender.com';
+
+// Precargamos los productos en el build para que el HTML llegue con el catálogo
+// ya renderizado, sin depender de que Render esté despierto en cada visita.
+// Reintentamos porque el primer hit puede fallar mientras Render sale del
+// cold start. Si igual no responde, seguimos con [] y la isla completa en el
+// cliente: el build nunca debe fallar por esto.
+let initialProducts = [];
+for (let intento = 1; intento <= 3; intento++) {
+  try {
+    const res = await fetch(`${API_URL}/api/products`, {
+      signal: AbortSignal.timeout(60000), // tolera el cold start de Render
+    });
+    const json = await res.json();
+    if (Array.isArray(json.data)) initialProducts = json.data;
+    break;
+  } catch (e) {
+    console.warn(`[GridCards] Precarga de productos falló (intento ${intento}/3):`, e?.message);
+    if (intento < 3) await new Promise((r) => setTimeout(r, 5000));
+  }
+}
 ---
 
 <section id="catalogo" class="py-12 bg-primary-50">
@@ -14,6 +36,6 @@ import FilterIsland from './GridCardsFilterIsland.jsx';
       </p>
     </div>
 
-    <FilterIsland client:load />
+    <FilterIsland client:load initialProducts={initialProducts} />
   </div>
 </section>
